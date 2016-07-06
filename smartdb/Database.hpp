@@ -20,7 +20,7 @@ public:
     bool open(const std::string& databaseName)
     {
         int ret = sqlite3_open(databaseName.c_str(), &m_dbHandle);
-        return ret == SQLITE_OK ? true : false;
+        return ret == SQLITE_OK;
     }
 
     bool close()
@@ -32,7 +32,15 @@ public:
 
         sqlite3_finalize(m_statement);
         int ret = closeDBHandle();
-        return ret == SQLITE_OK ? true : false;
+        m_statement = nullptr;
+        m_dbHandle = nullptr;
+        return ret == SQLITE_OK;
+    }
+
+    bool exec(const std::string& sql)
+    {
+        int ret = sqlite3_exec(m_dbHandle, sql.c_str(), nullptr, nullptr, nullptr);
+        return ret == SQLITE_OK;
     }
 
 private:
