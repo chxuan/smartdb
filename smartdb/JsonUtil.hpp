@@ -7,6 +7,9 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/document.h"
 
+namespace smartdb
+{
+
 class JsonUtil
 {
 public:
@@ -98,6 +101,8 @@ private:
     rapidjson::Writer<rapidjson::StringBuffer> m_writer;
     rapidjson::StringBuffer m_buf;
     rapidjson::Document m_doc;
+};
+
 };
 
 #endif
