@@ -5,13 +5,10 @@
 #include <memory>
 #include <type_traits>
 #include "sqlite3/sqlite3.h"
+#include "BindParames.hpp"
 
 namespace smartdb
 {
-
-static const std::string Begin = "BEGIN";
-static const std::string Commit = "COMMIT";
-static const std::string Rollback = "ROLLBACK";
 
 class Database
 {
@@ -66,6 +63,11 @@ public:
     template<typename... Args>
     bool executeArgs(Args&&... args)
     {
+        m_code = bindParams(m_statement, 1, std::forward<Args>(args)...);
+        if (m_code != SQLITE_OK)
+        {
+            return false;
+        }
 
         m_code = sqlite3_step(m_statement);
         sqlite3_reset(m_statement);
