@@ -6,7 +6,6 @@
 #include <type_traits>
 #include "sqlite3/sqlite3.h"
 
-
 namespace smartdb
 {
 

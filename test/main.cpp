@@ -1,12 +1,14 @@
 #include <iostream>
+#include "Timer.hpp"
 #include "smartdb/Database.hpp"
 #include "smartdb/JsonUtil.hpp"
 
 void testJsonUtil()
 {
+    Timer t;
     smartdb::JsonUtil json;
     json.startArray();
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 1000000; ++i)
     {
         json.startObject();
         json.writeJson("id", i);
@@ -15,7 +17,9 @@ void testJsonUtil()
         json.endObject();
     }
     json.endArray();
-    std::cout << json.getString() << std::endl;
+
+    // 100w 100~170ms
+    std::cout << "testJsonUtil time: " << t.elapsed() << "ms" << std::endl;
 }
 
 int main()
@@ -37,7 +41,6 @@ int main()
     std::cout << "Close db success" << std::endl;
 
     testJsonUtil();
-
 
     return 0;
 }
