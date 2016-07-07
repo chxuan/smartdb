@@ -28,14 +28,14 @@ template<typename T>
 typename std::enable_if<std::is_same<T, int64_t>::value || std::is_same<T, uint64_t>::value, int>::type
 bindValue(sqlite3_stmt* statement, int index, T t)
 {
-    sqlite3_bind_int64(statement, index, std::forward<T>(t));
+    return sqlite3_bind_int64(statement, index, std::forward<T>(t));
 }
 
 template<typename T>
 typename std::enable_if<!std::is_same<T, int64_t>::value && !std::is_same<T, uint64_t>::value, int>::type
 bindValue(sqlite3_stmt* statement, int index, T t)
 {
-    sqlite3_bind_int(statement, index, std::forward<T>(t));
+    return sqlite3_bind_int(statement, index, std::forward<T>(t));
 }
 
 template<typename T>
