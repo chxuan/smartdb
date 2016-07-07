@@ -74,6 +74,26 @@ public:
         return m_code == SQLITE_DONE;
     }
 
+    template<typename Tuple>
+    bool executeTuple(const std::string& sql, Tuple&& t)
+    {
+        if (!prepare(sql))        
+        {
+            return false;
+        }
+
+        (void)sql;
+        (void)t;
+        return true;
+    }
+
+    bool executeJson(const std::string& sql, const char& json)
+    {
+        (void)sql;
+        (void)json;
+        return true; 
+    }
+
     bool begin()
     {
         return execute(Begin);
