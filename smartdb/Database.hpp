@@ -3,9 +3,13 @@
 
 #include <string>
 #include <memory>
+#include <tuple>
+#include <functional>
+#include <unordered_map>
 #include <type_traits>
 #include "sqlite3/sqlite3.h"
 #include "BindParames.hpp"
+#include "Tuple.hpp"
 
 namespace smartdb
 {
@@ -82,9 +86,8 @@ public:
             return false;
         }
 
-        (void)sql;
-        (void)t;
-        return true;
+        m_code = executeTuple(m_statement, MakeIndexes<std::tuple_size<Tuple>::value>::type(), std::forward<Tuple>(t));
+        return m_code == SQLITE_DONE;
     }
 
     bool executeJson(const std::string& sql, const char& json)
