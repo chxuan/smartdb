@@ -60,6 +60,7 @@ bindValue(sqlite3_stmt* statement, int index, const T& t)
     assert(t.buf);
     return sqlite3_bind_blob(statement, index, t.buf, t.size, SQLITE_TRANSIENT);
 }
+
 template<typename T>
 typename std::enable_if<std::is_same<std::nullptr_t, T>::value, int>::type
 bindValue(sqlite3_stmt* statement, int index, const T& t)
