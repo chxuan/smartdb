@@ -21,10 +21,10 @@ struct MakeIndexes<0, Indexes...>
 };
 
 template<int... Indexes, typename Tuple>
-int executeTuple(sqlite3_stmt* statement, IndexTuple<Indexes...>&& in, Tuple&& t)
+int executeTuple2(sqlite3_stmt* statement, IndexTuple<Indexes...>&&, Tuple&& t)
 {
-    (void)in;
      int code = bindParams(statement, 1, std::get<Indexes>(std::forward<Tuple>(t))...);
+     /* int code = bindParams(statement, 1, std::get<Indexes>(t...); */
      if (code != SQLITE_OK)
      {
         return code;

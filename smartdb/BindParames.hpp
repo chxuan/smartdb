@@ -18,13 +18,6 @@ bindValue(sqlite3_stmt* statement, int index, T t)
 }
 
 template<typename T>
-typename std::enable_if<std::is_integral<T>::value, int>::type
-bindValue(sqlite3_stmt* statement, int index, T t)
-{
-    return bindIntValue(statement, index, t);
-}
-
-template<typename T>
 typename std::enable_if<std::is_same<T, int64_t>::value || std::is_same<T, uint64_t>::value, int>::type
 bindIntValue(sqlite3_stmt* statement, int index, T t)
 {
@@ -36,6 +29,13 @@ typename std::enable_if<!std::is_same<T, int64_t>::value && !std::is_same<T, uin
 bindIntValue(sqlite3_stmt* statement, int index, T t)
 {
     return sqlite3_bind_int(statement, index, std::forward<T>(t));
+}
+
+template<typename T>
+typename std::enable_if<std::is_integral<T>::value, int>::type
+bindValue(sqlite3_stmt* statement, int index, T t)
+{
+    return bindIntValue(statement, index, t);
 }
 
 template<typename T>
@@ -69,6 +69,21 @@ bindValue(sqlite3_stmt* statement, int index, const T& t)
     return sqlite3_bind_null(statement, index);
 }
 
+#if 1
+inline int bindParams(sqlite3_stmt* statement, int index)
+{
+    (void)statement;
+    (void)index;
+    return SQLITE_OK;
+}
+#else
+template<typename T>
+inline int bindParams(sqlite3_stmt* statement, int index, T&& first)
+{
+    return bindValue(statement, index, first);
+}
+#endif
+
 template<typename T, typename... Args>
 inline int bindParams(sqlite3_stmt* statement, int index, T&& first, Args&&... args)
 {
@@ -80,13 +95,6 @@ inline int bindParams(sqlite3_stmt* statement, int index, T&& first, Args&&... a
 
     code = bindParams(statement, index + 1, std::forward<Args>(args)...);
     return code;
-}
-
-inline int bindParams(sqlite3_stmt* statement, int index)
-{
-    (void)statement;
-    (void)index;
-    return SQLITE_OK;
 }
 
 };

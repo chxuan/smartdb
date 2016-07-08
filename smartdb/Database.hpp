@@ -86,8 +86,12 @@ public:
             return false;
         }
 
-        m_code = executeTuple(m_statement, MakeIndexes<std::tuple_size<Tuple>::value>::type(), std::forward<Tuple>(t));
-        return m_code == SQLITE_DONE;
+        /* m_code = executeTuple(m_statement, MakeIndexes<std::tuple_size<Tuple>::value>::type, std::forward<Tuple>(t)); */
+        /* const std::size_t size = std::tuple_size<Tuple>::value; */
+        executeTuple2(m_statement, MakeIndexes<std::tuple_size<Tuple>::value>::type(), std::forward<Tuple>(t));
+        /* std::cout << std::tuple_size<decltype(t)>::value << std::endl; */
+        /* return m_code == SQLITE_DONE; */
+        return true;
     }
 
 #if 0
