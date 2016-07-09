@@ -8,18 +8,55 @@ void testCreateTable()
     smartdb::Database db;
 	db.open("test.db");
 
-	const string sqlcreat = "CREATE TABLE if not exists PersonTable(ID INTEGER NOT NULL, Name Text, Address Text);";
+	/* const string sqlcreat = "CREATE TABLE if not exists PersonTable(ID INTEGER NOT NULL, Name Text, Address Text);"; */
+	const string sqlcreat = "CREATE TABLE if not exists PersonTable(ID INTEGER NOT NULL);";
 	if (!db.execute(sqlcreat))
 		return;
 
-	const string sqlinsert = "INSERT INTO PersonTable(ID, Name, Address) VALUES(?, ?, ?);";
-	int id = 2;
+    Timer t;
+	const string sqlinsert = "INSERT INTO PersonTable(ID) VALUES(?);";
 	string name = "Peter";
-	string city = "luzhou";
-	/* if (!db.execute(sqlinsert, id, name, city)) */
-	if (!db.executeTuple(sqlinsert, std::forward_as_tuple(id, name, city)))
+	string city = "Chegndu";
+#if 1
+	if (!db.prepare(sqlinsert))
+    {
+        std::cout << db.getErrorMessage() << std::endl;
 		return;
+    }
+
+    db.begin();
+    int ret;
+    for (int i = 1; i < 1000000; ++i)
+    {
+        /* ret = db.addBindValue(std::forward_as_tuple(i, name, city)); */
+        /* ret = db.addBindValue(i, name, city); */
+        ret = db.addBindValue(std::forward_as_tuple(1));
+        if (!ret)
+        {
+            std::cout << db.getErrorMessage() << std::endl;
+            break;
+        }
+    }
+    if (ret)
+    {
+        std::cout << "commit" << std::endl;
+        db.commit();
+    }
+    else
+    {
+        std::cout << "rollback" << std::endl;
+        db.rollback();
+    }
+#else
+	if (!db.executeTuple(sqlinsert, std::forward_as_tuple(10000000, name, city)))
+    {
+        std::cout << "failed" << std::endl;
+        std::cout << db.getErrorString() << std::endl;
+        std::cout << db.getErrorMessage() << std::endl;
+    }
+#endif
     std::cout << "success" << std::endl;
+    std::cout << "time: " << t.elapsed() << std::endl;
 }
 
 int main()

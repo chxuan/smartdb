@@ -1,6 +1,7 @@
 #ifndef _DATABASE_H
 #define _DATABASE_H
 
+#include <assert.h>
 #include <string>
 #include <memory>
 #include <tuple>
@@ -19,6 +20,11 @@ public:
     Database() = default;
     Database(const Database&) = delete;
     Database& operator=(const Database&) = delete;
+
+    ~Database()
+    {
+        close();
+    }
 
     bool open(const std::string& databaseName)
     {
@@ -54,7 +60,19 @@ public:
             return false;
         }
 
-        return executeArgs(std::forward<Args>(args)...);
+        return addBindValue(std::forward<Args>(args)...);
+    }
+
+    template<typename Tuple>
+    bool executeTuple(const std::string& sql, Tuple&& t)
+    /* bool execute(const std::string& sql, Tuple&& t) */
+    {
+        if (!prepare(sql))        
+        {
+            return false;
+        }
+
+        return addBindValue(std::forward<Tuple>(t));
     }
 
     bool prepare(const std::string& sql)
@@ -64,7 +82,7 @@ public:
     }
 
     template<typename... Args>
-    bool executeArgs(Args&&... args)
+    bool addBindValue(Args&&... args)
     {
         m_code = bindParams(m_statement, 1, std::forward<Args>(args)...);
         if (m_code != SQLITE_OK)
@@ -78,15 +96,17 @@ public:
     }
 
     template<typename Tuple>
-    bool executeTuple(const std::string& sql, Tuple&& t)
+    bool addBindValue(Tuple&& t)
     {
-        if (!prepare(sql))        
+        m_code = addBindTuple(m_statement, std::forward<Tuple>(t)); 
+        if (m_code != SQLITE_OK)
         {
             return false;
         }
 
-        executeTupleImpl(m_statement, std::forward<Tuple>(t));
-        return true;
+        m_code = sqlite3_step(m_statement);
+        sqlite3_reset(m_statement);
+        return m_code == SQLITE_DONE;
     }
 
     bool begin()
@@ -108,6 +128,17 @@ public:
     {
         return m_code; 
     }
+
+    const char* getErrorString() const
+    {
+        return sqlite3_errstr(m_code);
+    }
+
+    const char* getErrorMessage() const
+    {
+        return sqlite3_errmsg(m_dbHandle);
+    }
+
 private:
     int closeDBHandle()
     {

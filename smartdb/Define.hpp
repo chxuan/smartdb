@@ -3,9 +3,9 @@
 
 #include <string>
 
-const std::string Begin = "BEGIN";
-const std::string Commit = "COMMIT";
-const std::string Rollback = "ROLLBACK";
+const std::string Begin = "begin";
+const std::string Commit = "commit";
+const std::string Rollback = "rollback";
 
 namespace smartdb
 {
