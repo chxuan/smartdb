@@ -1,26 +1,6 @@
 #include <iostream>
 #include "Timer.hpp"
 #include "smartdb/Database.hpp"
-#include "smartdb/JsonUtil.hpp"
-
-void testJsonUtil()
-{
-    Timer t;
-    smartdb::JsonUtil json;
-    json.startArray();
-    for (int i = 0; i < 1000000; ++i)
-    {
-        json.startObject();
-        json.writeJson("id", i);
-        json.writeJson("name", "Jack");
-        json.writeJson("address", "Chengdu");
-        json.endObject();
-    }
-    json.endArray();
-
-    // 100w 100~170ms
-    std::cout << "testJsonUtil time: " << t.elapsed() << "ms" << std::endl;
-}
 
 using namespace std;
 void testCreateTable()
@@ -35,7 +15,7 @@ void testCreateTable()
 	const string sqlinsert = "INSERT INTO PersonTable(ID, Name, Address) VALUES(?, ?, ?);";
 	int id = 2;
 	string name = "Peter";
-	string city = "Chengdu";
+	string city = "luzhou";
 	/* if (!db.execute(sqlinsert, id, name, city)) */
 	if (!db.executeTuple(sqlinsert, std::forward_as_tuple(id, name, city)))
 		return;

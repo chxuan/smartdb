@@ -7,9 +7,8 @@
 #include <functional>
 #include <unordered_map>
 #include <type_traits>
-#include "JsonUtil.hpp"
 #include "BindParames.hpp"
-#include "Tuple.hpp"
+#include "TupleHelper.hpp"
 
 namespace smartdb
 {
@@ -86,32 +85,9 @@ public:
             return false;
         }
 
-        /* m_code = executeTuple(m_statement, MakeIndexes<std::tuple_size<Tuple>::value>::type, std::forward<Tuple>(t)); */
-        /* const std::size_t size = std::tuple_size<Tuple>::value; */
-        executeTuple2(m_statement, MakeIndexes<std::tuple_size<Tuple>::value>::type(), std::forward<Tuple>(t));
-        /* std::cout << std::tuple_size<decltype(t)>::value << std::endl; */
-        /* return m_code == SQLITE_DONE; */
+        executeTupleImpl(m_statement, std::forward<Tuple>(t));
         return true;
     }
-
-#if 0
-    bool executeJson(const std::string& sql, const char* json)
-    {
-        rapidjson::Document doc;
-        if (doc.Parse<0>(json).HasParseError())
-        {
-            std::cout << doc.GetParseError() << std::endl;
-            return false;
-        }
-
-        if (!prepare(sql))
-        {
-            return false;
-        }
-
-        return jsonTransaction(doc);
-    }
-#endif
 
     bool begin()
     {
@@ -153,33 +129,6 @@ private:
 
         return ret;
     }
-
-#if 0
-    bool jsonTransaction(const rapidjson::Document& doc)
-    {
-        if (!begin())
-        {
-            return false;
-        }
-
-        std::size_t size = doc.Size();
-        for (std::size_t i = 0; i < size; ++i)
-        {
-
-        }
-
-        if (m_code != SQLITE_DONE)
-        {
-            return false;
-        }
-
-        if (!commit())
-        {
-            return false;
-        }
-        return true;
-    }
-#endif
 
 private:
     sqlite3* m_dbHandle = nullptr;
