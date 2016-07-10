@@ -8,6 +8,7 @@
 #include <functional>
 #include <unordered_map>
 #include <type_traits>
+#include "Traits.hpp"
 #include "BindParames.hpp"
 #include "TupleHelper.hpp"
 
@@ -96,7 +97,7 @@ public:
     }
 
     template<typename Tuple>
-    bool addBindValue(Tuple&& t)
+    typename std::enable_if<is_tuple<Tuple>::value, bool>::type addBindValue(Tuple&& t)
     {
         m_code = addBindTuple(m_statement, std::forward<Tuple>(t)); 
         if (m_code != SQLITE_OK)

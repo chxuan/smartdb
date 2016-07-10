@@ -98,4 +98,5 @@ inline int bindParams(sqlite3_stmt* statement, int index, T&& first, Args&&... a
 }
 
 };
+
 #endif
