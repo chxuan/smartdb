@@ -124,6 +124,11 @@ public:
         return execute(Rollback);
     }
 
+    int affectedRows()
+    {
+        return sqlite3_changes(m_dbHandle);
+    }
+
     int getErrorCode() const
     {
         return m_code; 

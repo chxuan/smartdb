@@ -82,7 +82,7 @@ void testInsertTable2()
         std::cout << "Error message: " << db.getErrorMessage() << std::endl;
         return;
     }
-    std::cout << "Update success" << std::endl;
+    std::cout << "Update success, affected rows: " << db.affectedRows() << std::endl;
 }
 
 int main()
