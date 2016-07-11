@@ -65,8 +65,7 @@ public:
     }
 
     template<typename Tuple>
-    bool executeTuple(const std::string& sql, Tuple&& t)
-    /* bool execute(const std::string& sql, Tuple&& t) */
+    typename std::enable_if<is_tuple<Tuple>::value, bool>::type execute(const std::string& sql, Tuple&& t)
     {
         if (!prepare(sql))        
         {

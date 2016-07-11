@@ -11,11 +11,11 @@ void testInsertTable()
     std::string sql = "DROP TABLE PersonTable";
     db.execute(sql);
 
-    sql = "CREATE TABLE if not exists PersonTable(ID INTEGER NOT NULL, Name Text, Address Text)";
+    sql = "CREATE TABLE if not exists PersonTable(id INTEGER NOT NULL, name Text, address Text)";
     assert(db.execute(sql));
 
     Timer t;
-    sql = "INSERT INTO PersonTable(ID, Name, Address) VALUES(?, ?, ?)";
+    sql = "INSERT INTO PersonTable(id, name, address) VALUES(?, ?, ?)";
     std::string name = "Jack";
     std::string city = "Chengdu";
 
@@ -49,12 +49,39 @@ void testInsertTable()
     }
 
     // 100w 800~1000ms
-    std::cout << "time: " << t.elapsed() << std::endl;
+    std::cout << "Insert elapsed: " << t.elapsed() << std::endl;
+}
+
+void testInsertTable2()
+{
+    smartdb::Database db;
+    assert(db.open("test.db"));
+
+    std::string sql = "DROP TABLE PersonTable2";
+    db.execute(sql);
+
+    sql = "CREATE TABLE if not exists PersonTable2(id INTEGER NOT NULL, name Text, address Text)";
+    assert(db.execute(sql));
+
+    sql = "INSERT INTO PersonTable2(id, name, address) VALUES(?, ?, ?)";
+    std::string name = "Tom";
+    std::string city = "Chengdu";
+
+    Timer t;
+    for (int i = 0; i < 1000; ++i)
+    {
+        /* assert(db.execute(sql, i, name, city)); */
+        assert(db.execute(sql, std::forward_as_tuple(i, name, city)));
+    }
+
+    // 1000 2~4s
+    std::cout << "Insert2 elapsed: " << t.elapsed() << std::endl;
 }
 
 int main()
 {
     testInsertTable();
+    testInsertTable2();
 
     return 0;
 }
