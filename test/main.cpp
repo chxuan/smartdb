@@ -6,13 +6,13 @@
 void testInsertTable()
 {
     smartdb::Database db;
-	assert(db.open("test.db"));
+    assert(db.open("test.db"));
 
     std::string sql = "DROP TABLE PersonTable";
-	db.execute(sql);
+    db.execute(sql);
 
     sql = "CREATE TABLE if not exists PersonTable(ID INTEGER NOT NULL, Name Text, Address Text)";
-	assert(db.execute(sql));
+    assert(db.execute(sql));
 
     Timer t;
     sql = "INSERT INTO PersonTable(ID, Name, Address) VALUES(?, ?, ?)";
@@ -20,7 +20,7 @@ void testInsertTable()
     std::string city = "Chengdu";
 
     // 预处理sql
-	assert(db.prepare(sql));
+    assert(db.prepare(sql));
 
     // 开始事务
     assert(db.begin());
