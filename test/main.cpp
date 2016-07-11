@@ -48,6 +48,7 @@ void testInsertTable()
         assert(db.rollback());
     }
 
+    // 100w 800~1000ms
     std::cout << "time: " << t.elapsed() << std::endl;
 }
 
