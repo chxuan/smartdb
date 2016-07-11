@@ -76,6 +76,15 @@ void testInsertTable2()
 
     // 1000 2~4s
     std::cout << "Insert2 elapsed: " << t.elapsed() << std::endl;
+
+    // update
+    sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
+    if (!db.execute(sql, std::forward_as_tuple(std::string("China"), 0)))
+    {
+        std::cout << "Error message: " << db.getErrorMessage() << std::endl;
+        return;
+    }
+    std::cout << "Update success" << std::endl;
 }
 
 int main()
