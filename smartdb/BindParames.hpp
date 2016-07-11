@@ -2,6 +2,7 @@
 #define _BINDPARAMES_H
 
 #include <assert.h>
+#include <string.h>
 #include <iostream>
 #include <type_traits>
 #include "sqlite3/sqlite3.h"
@@ -63,17 +64,14 @@ bindValue(sqlite3_stmt* statement, int index, const T& t)
 
 template<typename T>
 typename std::enable_if<std::is_same<std::nullptr_t, T>::value, int>::type
-bindValue(sqlite3_stmt* statement, int index, const T& t)
+bindValue(sqlite3_stmt* statement, int index, const T&)
 {
-    (void)t;
     return sqlite3_bind_null(statement, index);
 }
 
 #if 1
-inline int bindParams(sqlite3_stmt* statement, int index)
+inline int bindParams(sqlite3_stmt*, int)
 {
-    (void)statement;
-    (void)index;
     return SQLITE_OK;
 }
 #else

@@ -16,7 +16,7 @@ void testInsertTable()
 
     Timer t;
     sql = "INSERT INTO PersonTable(id, name, address) VALUES(?, ?, ?)";
-    std::string name = "Jack";
+    const char* name = "Jack";
     std::string city = "Chengdu";
 
     // 预处理sql
@@ -64,14 +64,12 @@ void testInsertTable2()
     assert(db.execute(sql));
 
     sql = "INSERT INTO PersonTable2(id, name, address) VALUES(?, ?, ?)";
-    std::string name = "Tom";
-    std::string city = "Chengdu";
 
     Timer t;
     for (int i = 0; i < 1000; ++i)
     {
-        /* assert(db.execute(sql, i, name, city)); */
-        assert(db.execute(sql, std::forward_as_tuple(i, name, city)));
+        /* assert(db.execute(sql, i, "Tom", nullptr)); */
+        assert(db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr)));
     }
 
     // 1000 2~4s
@@ -79,7 +77,7 @@ void testInsertTable2()
 
     // update
     sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
-    if (!db.execute(sql, std::forward_as_tuple(std::string("China"), 0)))
+    if (!db.execute(sql, "China", 0))
     {
         std::cout << "Error message: " << db.getErrorMessage() << std::endl;
         return;
