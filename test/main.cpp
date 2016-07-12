@@ -83,6 +83,8 @@ void testInsertTable2()
         return;
     }
     std::cout << "Update success, affected rows: " << db.affectedRows() << std::endl;
+
+    db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0);
 }
 
 int main()

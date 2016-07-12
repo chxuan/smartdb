@@ -11,6 +11,7 @@
 #include "Traits.hpp"
 #include "BindParames.hpp"
 #include "TupleHelper.hpp"
+#include "Query.hpp"
 
 namespace smartdb
 {
@@ -18,9 +19,9 @@ namespace smartdb
 class Database
 {
 public:
-    Database() = default;
     Database(const Database&) = delete;
     Database& operator=(const Database&) = delete;
+    Database() : m_query(m_buf, m_code) {}
 
     ~Database()
     {
@@ -61,7 +62,16 @@ public:
             return false;
         }
 
-        return addBindValue(std::forward<Args>(args)...);
+        /* return addBindValue(std::forward<Args>(args)...); */
+        bool ok = addBindValue(std::forward<Args>(args)...);
+        if (!m_query.isSelect(m_statement))
+        {
+            return ok;
+        }
+
+        m_query.readTable(m_statement);
+
+        return ok;
     }
 
     template<typename Tuple>
@@ -170,6 +180,8 @@ private:
     sqlite3* m_dbHandle = nullptr;
     sqlite3_stmt* m_statement = nullptr;
     int m_code = 0;
+    std::vector<std::vector<DBVariant>> m_buf;
+    Query m_query;
 };
 
 };
