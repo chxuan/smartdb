@@ -8,7 +8,10 @@ aux_source_directory(. DIR_SRCS)
 
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/..)
+include_directories($ENV{BOOST_INCLUDE_PATH})
+
 link_directories(${PROJECT_SOURCE_DIR}/../sqlite3)
+link_directories($ENV{BOOST_LIB_PATH})
 
 add_executable(${OUTPUTNAME} ${DIR_SRCS})
 

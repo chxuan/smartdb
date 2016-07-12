@@ -84,6 +84,10 @@ flags = [
 '-isystem',
 '/usr/include/c++/6.1.0',
 
+# 3rdParty include path
+'-isystem',
+'/usr/local/3rdParty/boost/include',
+
 # project include path
 '-isystem',
 './',
