@@ -50,6 +50,18 @@ void testInsertTable()
 
     // 100w 800~1000ms
     std::cout << "Insert elapsed: " << t.elapsed() << std::endl;
+
+    t.reset();
+    // select
+    assert(db.execute("SELECT * FROM PersonTable"));
+    std::cout << "Record count: " << db.recordCount() << std::endl;
+    while (!db.isEnd())
+    {
+        db.moveNext();
+    }
+    // 100w 1000~1500ms
+    std::cout << "Select elapsed: " << t.elapsed() << std::endl;
+
 }
 
 void testInsertTable2()
@@ -84,7 +96,24 @@ void testInsertTable2()
     }
     std::cout << "Update success, affected rows: " << db.affectedRows() << std::endl;
 
-    db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0);
+    // select
+    assert(db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0));
+    /* assert(db.execute("SELECT * FROM PersonTable2")); */
+    while (!db.isEnd())
+    {
+        try
+        {
+            std::cout << "id: " << db.getFiled<sqlite3_int64>(0) << std::endl;
+            std::cout << "name: " << db.getFiled<std::string>(1) << std::endl;
+            std::cout << "address: " << db.getFiled<std::string>(2) << std::endl;
+        }
+        catch (std::exception& e)
+        {
+            std::cout << "Exception: " << e.what() << std::endl;
+            return;
+        }
+        db.moveNext();
+    }
 }
 
 int main()

@@ -50,22 +50,16 @@ public:
 
     bool execute(const std::string& sql)
     {
-        m_code = sqlite3_exec(m_dbHandle, sql.c_str(), nullptr, nullptr, nullptr);
-        /* return m_code == SQLITE_OK; */
-        if (m_code != SQLITE_OK)
+        if (!prepare(sql))
         {
             return false;
         }
 
-        if (m_query.isSelect(m_statement))
+        if (!execute())
         {
-            if (!m_query.readTable(m_statement))
-            {
-                return false;
-            }
-            moveFirst();
+            return false;
         }
-        return true;
+        return trySelect();
     }
 
     template<typename... Args>
@@ -76,21 +70,11 @@ public:
             return false;
         }
 
-        /* return addBindValue(std::forward<Args>(args)...); */
         if (!addBindValue(std::forward<Args>(args)...))
         {
             return false;
         }
-
-        if (m_query.isSelect(m_statement))
-        {
-            if (!m_query.readTable(m_statement))
-            {
-                return false;
-            }
-            moveFirst();
-        }
-        return true;
+        return trySelect();
     }
 
     template<typename Tuple>
@@ -101,12 +85,15 @@ public:
             return false;
         }
 
-        /* return addBindValue(std::forward<Tuple>(t)); */
         if (!addBindValue(std::forward<Tuple>(t)))
         {
             return false;
         }
+        return trySelect();
+    }
 
+    bool trySelect()
+    {
         if (m_query.isSelect(m_statement))
         {
             if (!m_query.readTable(m_statement))
@@ -132,10 +119,7 @@ public:
         {
             return false;
         }
-
-        m_code = sqlite3_step(m_statement);
-        sqlite3_reset(m_statement);
-        return m_code == SQLITE_DONE;
+        return execute();
     }
 
     template<typename Tuple>
@@ -146,10 +130,7 @@ public:
         {
             return false;
         }
-
-        m_code = sqlite3_step(m_statement);
-        sqlite3_reset(m_statement);
-        return m_code == SQLITE_DONE;
+        return execute();
     }
 
     template<typename T>
@@ -180,17 +161,20 @@ public:
 
     bool begin()
     {
-        return execute(Begin);
+        m_code = sqlite3_exec(m_dbHandle, Begin.c_str(), nullptr, nullptr, nullptr);
+        return m_code == SQLITE_OK;
     }
 
     bool commit()
     {
-        return execute(Commit);
+        m_code = sqlite3_exec(m_dbHandle, Commit.c_str(), nullptr, nullptr, nullptr);
+        return m_code == SQLITE_OK;
     }
 
     bool rollback()
     {
-        return execute(Rollback);
+        m_code = sqlite3_exec(m_dbHandle, Rollback.c_str(), nullptr, nullptr, nullptr);
+        return m_code == SQLITE_OK;
     }
 
     int affectedRows()
@@ -233,6 +217,15 @@ private:
         }
 
         return ret;
+    }
+
+    bool execute()
+    {
+        m_code = sqlite3_step(m_statement);
+        sqlite3_reset(m_statement);
+        // 当执行insert、update、drop等操作时成功返回SQLITE_DONE.
+        // 当执行select操作时，成功返回SQLITE_ROW.
+        return (m_code == SQLITE_DONE || m_code == SQLITE_ROW || m_code == SQLITE_OK);
     }
 
 private:

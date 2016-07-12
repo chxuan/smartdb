@@ -90,7 +90,7 @@ private:
             }
         case SQLITE_NULL:
             {
-                buf.emplace_back(nullptr);
+                buf.emplace_back(std::string(""));
                 break; 
             }
         default: 
@@ -104,8 +104,8 @@ private:
     }
 
 private:
-    std::vector<std::vector<DBVariant>> m_buf;
-    int m_code = 0;
+    std::vector<std::vector<DBVariant>>& m_buf;
+    int& m_code;
     int m_colCount = 0;
 };
 
