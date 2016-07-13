@@ -20,16 +20,16 @@ void testInsertTable()
     const char* name = "Jack";
     std::string city = "Chengdu";
 
-    // 预处理sql
+    // 预处理sql.
     assert(db.prepare(sql));
 
-    // 开始事务
+    // 开始事务.
     assert(db.begin());
 
     bool ret = true;
     for (int i = 1; i < 1000000; ++i)
     {
-        // 绑定参数
+        // 绑定参数.
         /* ret = db.addBindValue(std::forward_as_tuple(i, name, city)); */
         ret = db.addBindValue(i, name, city);
         if (!ret)
@@ -40,27 +40,27 @@ void testInsertTable()
     }
     if (ret)
     {
-        // 提交事务
+        // 提交事务.
         assert(db.commit());
     }
     else
     {
-        // 回滚事务
+        // 回滚事务.
         assert(db.rollback());
     }
 
-    // 100w 800~1000ms
+    // 100w 800~1000ms.
     std::cout << "Insert elapsed: " << t.elapsed() << std::endl;
 
     t.reset();
-    // select
+    // select.
     assert(db.execute("SELECT * FROM PersonTable"));
     std::cout << "Record count: " << db.recordCount() << std::endl;
     while (!db.isEnd())
     {
         db.moveNext();
     }
-    // 100w 300~500ms
+    // 100w 300~500ms.
     std::cout << "Select elapsed: " << t.elapsed() << std::endl;
 }
 
@@ -75,7 +75,7 @@ void testInsertTable2()
     sql = "CREATE TABLE if not exists PersonTable2(id INTEGER NOT NULL, name Text, address Text, headerImage BLOB)";
     assert(db.execute(sql));
 
-    // 读取一张图片
+    // 读取一张图片.
     std::ifstream fin;
     fin.open("./1.jpg", std::ios::binary);
     assert(fin.is_open());
@@ -94,10 +94,10 @@ void testInsertTable2()
         assert(db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr, headImage)));
     }
 
-    // 1000 2~4s
+    // 1000 2~4s.
     std::cout << "Insert2 elapsed: " << t.elapsed() << std::endl;
 
-    // update
+    // update.
     sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
     if (!db.execute(sql, "中国", 0))
     {
@@ -106,7 +106,7 @@ void testInsertTable2()
     }
     std::cout << "Update success, affected rows: " << db.affectedRows() << std::endl;
 
-    // select
+    // select.
     assert(db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0));
     /* assert(db.execute("SELECT * FROM PersonTable2")); */
     while (!db.isEnd())
