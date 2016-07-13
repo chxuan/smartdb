@@ -15,7 +15,7 @@ namespace smartdb
 struct Blob
 {
     const char* buf = nullptr;
-    int size = 0;
+    std::size_t size = 0;
 };
 
 using DBVariant = 

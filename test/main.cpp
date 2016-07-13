@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <fstream>
 #include "Timer.hpp"
 #include "smartdb/Database.hpp"
 
@@ -71,16 +72,26 @@ void testInsertTable2()
     std::string sql = "DROP TABLE PersonTable2";
     db.execute(sql);
 
-    sql = "CREATE TABLE if not exists PersonTable2(id INTEGER NOT NULL, name Text, address Text)";
+    sql = "CREATE TABLE if not exists PersonTable2(id INTEGER NOT NULL, name Text, address Text, headerImage BLOB)";
     assert(db.execute(sql));
 
-    sql = "INSERT INTO PersonTable2(id, name, address) VALUES(?, ?, ?)";
+    // 读取一张图片
+    std::ifstream fin;
+    fin.open("./1.jpg", std::ios::binary);
+    assert(fin.is_open());
+    char buf[50 * 1025] = {"\0"};
+    fin.read(buf, sizeof(buf));
+    std::string image = std::string(buf, fin.gcount());
+    smartdb::Blob headImage;
+    headImage.buf = image.c_str();
+    headImage.size = image.length();
 
+    sql = "INSERT INTO PersonTable2(id, name, address, headerImage) VALUES(?, ?, ?, ?)";
     Timer t;
     for (int i = 0; i < 1000; ++i)
     {
-        /* assert(db.execute(sql, i, "Tom", nullptr)); */
-        assert(db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr)));
+        /* assert(db.execute(sql, i, "Tom", nullptr, headImage)); */
+        assert(db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr, headImage)));
     }
 
     // 1000 2~4s
@@ -88,7 +99,6 @@ void testInsertTable2()
 
     // update
     sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
-    /* if (!db.execute(sql, "China", 0)) */
     if (!db.execute(sql, "中国", 0))
     {
         std::cout << "Error message: " << db.getErrorMessage() << std::endl;
@@ -106,6 +116,7 @@ void testInsertTable2()
             std::cout << "id: " << db.getFiled<sqlite3_int64>(0) << std::endl;
             std::cout << "name: " << db.getFiled<std::string>(1) << std::endl;
             std::cout << "address: " << db.getFiled<std::string>(2) << std::endl;
+            std::cout << "image size: " << db.getFiled<std::string>(3).size() << std::endl;
         }
         catch (std::exception& e)
         {
