@@ -59,7 +59,7 @@ void testInsertTable()
     {
         db.moveNext();
     }
-    // 100w 1000~1500ms
+    // 100w 300~500ms
     std::cout << "Select elapsed: " << t.elapsed() << std::endl;
 
 }
@@ -113,6 +113,12 @@ void testInsertTable2()
             return;
         }
         db.moveNext();
+    }
+
+    assert(db.execute("SELECT COUNT(*) FROM PersonTable2"));
+    if (db.recordCount() == 1 && !db.isEnd())
+    {
+        std::cout << "COUNT(*): " << db.getFiled<sqlite3_int64>(0) << std::endl;
     }
 }
 
