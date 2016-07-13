@@ -88,7 +88,8 @@ void testInsertTable2()
 
     // update
     sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
-    if (!db.execute(sql, "China", 0))
+    /* if (!db.execute(sql, "China", 0)) */
+    if (!db.execute(sql, "中国", 0))
     {
         std::cout << "Error message: " << db.getErrorMessage() << std::endl;
         return;
