@@ -61,7 +61,6 @@ void testInsertTable()
     }
     // 100w 300~500ms
     std::cout << "Select elapsed: " << t.elapsed() << std::endl;
-
 }
 
 void testInsertTable2()
