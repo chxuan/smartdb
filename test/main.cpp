@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <iostream>
 #include <fstream>
 #include "Timer.hpp"
@@ -41,12 +40,12 @@ void testInsertTable()
     if (ret)
     {
         // 提交事务.
-        assert(db.commit());
+        ok = db.commit();
     }
     else
     {
         // 回滚事务.
-        assert(db.rollback());
+        ok = db.rollback();
     }
 
     // 100w 800~1000ms.
