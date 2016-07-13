@@ -7,13 +7,13 @@
 void testInsertTable()
 {
     smartdb::Database db;
-    assert(db.open("test.db"));
+    bool ok = db.open("test.db");
 
     std::string sql = "DROP TABLE PersonTable";
-    db.execute(sql);
+    ok = db.execute(sql);
 
     sql = "CREATE TABLE if not exists PersonTable(id INTEGER NOT NULL, name Text, address Text)";
-    assert(db.execute(sql));
+    ok = db.execute(sql);
 
     Timer t;
     sql = "INSERT INTO PersonTable(id, name, address) VALUES(?, ?, ?)";
@@ -21,10 +21,10 @@ void testInsertTable()
     std::string city = "Chengdu";
 
     // 预处理sql.
-    assert(db.prepare(sql));
+    ok = db.prepare(sql);
 
     // 开始事务.
-    assert(db.begin());
+    ok = db.begin();
 
     bool ret = true;
     for (int i = 1; i < 1000000; ++i)
@@ -54,7 +54,7 @@ void testInsertTable()
 
     t.reset();
     // select.
-    assert(db.execute("SELECT * FROM PersonTable"));
+    ok = db.execute("SELECT * FROM PersonTable");
     std::cout << "Record count: " << db.recordCount() << std::endl;
     while (!db.isEnd())
     {
@@ -62,23 +62,24 @@ void testInsertTable()
     }
     // 100w 300~500ms.
     std::cout << "Select elapsed: " << t.elapsed() << std::endl;
+    (void)ok;
 }
 
 void testInsertTable2()
 {
     smartdb::Database db;
-    assert(db.open("test.db"));
+    bool ok = db.open("test.db");
 
     std::string sql = "DROP TABLE PersonTable2";
-    db.execute(sql);
+    ok = db.execute(sql);
 
     sql = "CREATE TABLE if not exists PersonTable2(id INTEGER NOT NULL, name Text, address Text, headerImage BLOB)";
-    assert(db.execute(sql));
+    ok = db.execute(sql);
 
     // 读取一张图片.
     std::ifstream fin;
     fin.open("./1.jpg", std::ios::binary);
-    assert(fin.is_open());
+    ok = fin.is_open();
     char buf[50 * 1025] = {"\0"};
     fin.read(buf, sizeof(buf));
     std::string image = std::string(buf, fin.gcount());
@@ -87,15 +88,11 @@ void testInsertTable2()
     headImage.size = image.length();
 
     sql = "INSERT INTO PersonTable2(id, name, address, headerImage) VALUES(?, ?, ?, ?)";
-    Timer t;
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < 10; ++i)
     {
-        /* assert(db.execute(sql, i, "Tom", nullptr, headImage)); */
-        assert(db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr, headImage)));
+        /* ok = db.execute(sql, i, "Tom", nullptr, headImage); */
+        ok = db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr, headImage));
     }
-
-    // 1000 2~4s.
-    std::cout << "Insert2 elapsed: " << t.elapsed() << std::endl;
 
     // update.
     sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
@@ -107,8 +104,8 @@ void testInsertTable2()
     std::cout << "Update success, affected rows: " << db.affectedRows() << std::endl;
 
     // select.
-    assert(db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0));
-    /* assert(db.execute("SELECT * FROM PersonTable2")); */
+    ok = db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0);
+    /* ok = db.execute("SELECT * FROM PersonTable2"); */
     while (!db.isEnd())
     {
         try
@@ -126,11 +123,12 @@ void testInsertTable2()
         db.moveNext();
     }
 
-    assert(db.execute("SELECT COUNT(*) FROM PersonTable2"));
+    ok = db.execute("SELECT COUNT(*) FROM PersonTable2");
     if (db.recordCount() == 1 && !db.isEnd())
     {
         std::cout << "COUNT(*): " << db.getFiled<sqlite3_int64>(0) << std::endl;
     }
+    (void)ok;
 }
 
 int main()
