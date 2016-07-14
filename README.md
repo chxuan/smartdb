@@ -190,7 +190,7 @@ int main()
 
 ## 兼容性
 
-* `Linux x86_64` gcc 4.8, 4.9, gcc 5.
+* `Linux x86_64` gcc 4.8, gcc4.9, gcc 5.
 * `Windows x86_64` Visual Studio 2015
 
 ## License
