@@ -38,6 +38,16 @@ A SQLite client library written in Modern C++
     ```  
 使用`isEnd`和`moveNext`即可遍历结果集，获取字段值需要提供字段的类型以及字段序号，没有使用字段名来代替字段序号来获取值，主要是考虑到效率问题。
 
+* **使用聚合函数**
+
+    ```cpp
+    db.execute("SELECT COUNT(*) FROM PersonTable");
+    if (db.recordCount() == 1 && !db.isEnd())
+    {
+        std::cout << db.getFiled<sqlite3_int64>(0) << std::endl;
+    }
+    ```  
+
 ## Example
 
 ```cpp
