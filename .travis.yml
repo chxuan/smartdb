@@ -20,6 +20,9 @@ install:
         - sudo ln -s /usr/lib64/libstd* /usr/lib/x86_64-linux-gnu/
 
 script: 
-        - cd test
+        - cd sqlite3
+        - cmake .
+        - make
+        - cd ../test
         - cmake .
         - make
