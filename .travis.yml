@@ -26,3 +26,7 @@ script:
         - cd ../test
         - cmake .
         - make
+
+after_success:
+        - sudo pip install cpp-coveralls
+        - coveralls -r .. -e test -e sqlite3 --gcov-options '\-lp'
