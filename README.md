@@ -3,7 +3,9 @@ A SQLite client library written in Modern C++
 
 > smartdb是一个纯c++11开发，header-only，简洁高效的sqlite封装库.
 
-![License][1] [![Build Status](https://travis-ci.org/chxuan/smartdb.svg?branch=master)](https://travis-ci.org/chxuan/smartdb)
+![License][1] 
+[![Build Status](https://travis-ci.org/chxuan/smartdb.svg?branch=master)](https://travis-ci.org/chxuan/smartdb)
+[![Coverage Status](https://coveralls.io/repos/github/chxuan/smartdb/badge.svg?branch=master)](https://coveralls.io/github/chxuan/smartdb?branch=master)
 
 * **连接数据库，若`test.db`不存在，则会创建一个.**
 
