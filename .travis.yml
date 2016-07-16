@@ -29,4 +29,4 @@ script:
 
 after_success:
         - sudo pip install cpp-coveralls
-        - coveralls -r .. -e test -e sqlite3 --gcov-options '\-lp'
+        - coveralls -r .. -e test/CMakeFiles -e sqlite3 --gcov-options '\-lp'
