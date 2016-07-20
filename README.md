@@ -1,9 +1,9 @@
 A SQLite client library written in Modern C++
 ===============================================
 
-> smartdb是一个纯c++11开发，header-only，简洁高效的sqlite封装库.
+> smartdb是一个纯c++11开发，header-only，简洁高效的sqlite封装库，灵感来自于[qicosmos/SmartDB1.03][1]，并进行了一些接口改进。
 
-![License][1] 
+![License][2] 
 [![Build Status](https://travis-ci.org/chxuan/smartdb.svg?branch=master)](https://travis-ci.org/chxuan/smartdb)
 [![Coverage Status](https://coveralls.io/repos/github/chxuan/smartdb/badge.svg?branch=master)](https://coveralls.io/github/chxuan/smartdb?branch=master)
 
@@ -206,8 +206,9 @@ int main()
 * `Windows x86_64` Visual Studio 2015
 
 ## License
-This software is licensed under the [MIT license][2]. © 2016 chxuan
+This software is licensed under the [MIT license][3]. © 2016 chxuan
 
 
-  [1]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-  [2]: https://github.com/chxuan/smartdb/blob/master/LICENSE
+  [1]: https://github.com/qicosmos/SmartDB1.03
+  [2]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+  [3]: https://github.com/chxuan/smartdb/blob/master/LICENSE
