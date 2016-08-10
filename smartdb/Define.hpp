@@ -21,6 +21,6 @@ struct Blob
 using DBVariant = 
 boost::variant<int, uint32_t, double, sqlite3_int64, char*, const char*, std::string, Blob, std::nullptr_t>;
 
-};
+}
 
 #endif

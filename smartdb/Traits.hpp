@@ -72,7 +72,7 @@ template<typename T> struct is_poiner_extent<std::shared_ptr<T>> : std::true_typ
 template<typename T> struct is_poiner_extent<std::unique_ptr<T>> : std::true_type{};
 template<typename T> struct is_poiner_extent<std::weak_ptr<T>> : std::true_type{};
 
-};
+}
 
 template <typename Arary>
 struct is_std_array : std::false_type {};

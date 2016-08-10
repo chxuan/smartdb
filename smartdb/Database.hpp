@@ -237,6 +237,6 @@ private:
     Query m_query;
 };
 
-};
+}
 
 #endif

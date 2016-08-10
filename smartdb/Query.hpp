@@ -109,5 +109,5 @@ private:
     int m_colCount = 0;
 };
 
-};
+}
 #endif

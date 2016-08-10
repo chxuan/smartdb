@@ -37,6 +37,6 @@ int addBindTuple(sqlite3_stmt* statement, const std::tuple<Args...>& t)
     return TuplePrinter<decltype(t), sizeof...(Args)>::foreach(statement, t);
 }
 
-};
+}
 
 #endif
