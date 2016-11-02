@@ -151,7 +151,12 @@ public:
 
     bool isEnd()
     {
-        return m_iter == m_buf.end(); 
+        if (m_iter == m_buf.end())
+        {
+            m_buf.clear();
+            return true;
+        }
+        return false;
     }
 
     std::size_t recordCount()
