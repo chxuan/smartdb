@@ -197,7 +197,7 @@ int main()
 
 ## 注意
 
-smartdb里面所支持的类型有int, uint32_t, double, sqlite3_int64, char*, const char*, std::string, Blob, std::nullptr_t，当调用`db.getFiled<>`函数获取值时，传入的类型必须是smartdb所支持的类型并且该类型为smartdb内部存储该值得类型，比如说有一个id字段，在smartdb里面是sqlite3_int64类型，正确的做法是调用`db.getFiled<sqlite3_int64>`而不是调用`db.getFiled<std::string>`函数获取std::string类型的值，如果类型错误，程序将会抛出异常，用户需捕获该异常。
+smartdb里面所支持的类型有int, uint32_t, double, sqlite3_int64, char*, const char*, std::string, Blob, std::nullptr_t，当调用`db.getFiled<>`函数获取值时，传入的类型必须是smartdb所支持的类型并且该类型为smartdb内部存储该值的类型，比如说有一个id字段，在smartdb里面是sqlite3_int64类型，正确的做法是调用`db.getFiled<sqlite3_int64>`而不是调用`db.getFiled<std::string>`函数获取std::string类型的值，如果类型错误，程序将会抛出异常，用户需捕获该异常。
 
 ## 依赖性
 
