@@ -156,7 +156,7 @@
     <ClInclude Include="..\smartdb\db_query.hpp" />
     <ClInclude Include="..\smartdb\traits.hpp" />
     <ClInclude Include="..\smartdb\tuple_helper.hpp" />
-    <ClInclude Include="Timer.hpp" />
+    <ClInclude Include="timer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
