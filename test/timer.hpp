@@ -3,55 +3,55 @@
 
 #include <chrono>
 
-class Timer
+class timer
 {
 public:
-    Timer() : m_begin(std::chrono::high_resolution_clock::now()) {}
+    timer() : _begin(std::chrono::high_resolution_clock::now()) {}
 
     void reset()
     {
-        m_begin = std::chrono::high_resolution_clock::now();
+        _begin = std::chrono::high_resolution_clock::now();
     }
 
     // 默认输出毫秒.
     template<typename Duration = std::chrono::milliseconds>
     long long elapsed() const
     {
-        return std::chrono::duration_cast<Duration>(std::chrono::high_resolution_clock::now() - m_begin).count();
+        return std::chrono::duration_cast<Duration>(std::chrono::high_resolution_clock::now() - _begin).count();
     }
 
     // 微秒.
-    long long elapsedMicroseconds() const
+    long long elapsed_microseconds() const
     {
         return elapsed<std::chrono::microseconds>();
     }
 
     // 纳秒.
-    long long elapsedNanoSeconds() const
+    long long elapsed_nanoseconds() const
     {
         return elapsed<std::chrono::nanoseconds>();
     }
 
     // 秒.
-    long long elapsedSeconds() const
+    long long elapsed_seconds() const
     {
         return elapsed<std::chrono::seconds>();
     }
 
     // 分.
-    long long elapsedMinutes() const
+    long long elapsed_minutes() const
     {
         return elapsed<std::chrono::minutes>();
     }
 
     // 时.
-    long long elapsedHours() const
+    long long elapsed_hours() const
     {
         return elapsed<std::chrono::hours>();
     }
 
 private:
-    std::chrono::time_point<std::chrono::high_resolution_clock> m_begin;
+    std::chrono::time_point<std::chrono::high_resolution_clock> _begin;
 };
 
 #endif

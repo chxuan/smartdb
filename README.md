@@ -30,12 +30,12 @@ A SQLite client library written in Modern C++
 
     ```cpp
     db.execute("SELECT * FROM PersonTable");
-    while (!db.isEnd())
+    while (!db.is_end())
     {
-        std::cout << "id: " << db.getFiled<sqlite3_int64>(0) << std::endl;
-        std::cout << "name: " << db.getFiled<std::string>(1) << std::endl;
-        std::cout << "address: " << db.getFiled<std::string>(2) << std::endl;
-        db.moveNext();
+        std::cout << "id: " << db.get<sqlite3_int64>(0) << std::endl;
+        std::cout << "name: " << db.get<std::string>(1) << std::endl;
+        std::cout << "address: " << db.get<std::string>(2) << std::endl;
+        db.move_next();
     }
     ```  
 使用`isEnd`和`moveNext`即可遍历结果集，获取字段值需要提供字段的类型以及字段序号，没有使用字段名来代替字段序号来获取值，主要是考虑到效率问题。
@@ -44,9 +44,9 @@ A SQLite client library written in Modern C++
 
     ```cpp
     db.execute("SELECT COUNT(*) FROM PersonTable");
-    if (db.recordCount() == 1 && !db.isEnd())
+    if (db.record_count() == 1 && !db.is_end())
     {
-        std::cout << db.getFiled<sqlite3_int64>(0) << std::endl;
+        std::cout << db.get<sqlite3_int64>(0) << std::endl;
     }
     ```  
 
@@ -55,12 +55,12 @@ A SQLite client library written in Modern C++
 ```cpp
 #include <iostream>
 #include <fstream>
-#include "Timer.hpp"
-#include "smartdb/Database.hpp"
+#include "timer.hpp"
+#include "smartdb/database.hpp"
 
-void testInsertTable()
+void test_insert_table()
 {
-    smartdb::Database db;
+    smartdb::database db;
     bool ok = db.open("test.db");
 
     std::string sql = "DROP TABLE PersonTable";
@@ -69,7 +69,7 @@ void testInsertTable()
     sql = "CREATE TABLE if not exists PersonTable(id INTEGER NOT NULL, name Text, address Text)";
     ok = db.execute(sql);
 
-    Timer t;
+    timer t;
     sql = "INSERT INTO PersonTable(id, name, address) VALUES(?, ?, ?)";
     const char* name = "Jack";
     std::string city = "Chengdu";
@@ -84,11 +84,11 @@ void testInsertTable()
     for (int i = 1; i < 1000000; ++i)
     {
         // 绑定参数.
-        /* ret = db.addBindValue(std::forward_as_tuple(i, name, city)); */
-        ret = db.addBindValue(i, name, city);
+        /* ret = db.add_bind_value(std::forward_as_tuple(i, name, city)); */
+        ret = db.add_bind_value(i, name, city);
         if (!ret)
         {
-            std::cout << "Error message: " << db.getErrorMessage() << std::endl;
+            std::cout << "Error message: " << db.get_error_message() << std::endl;
             break;
         }
     }
@@ -109,19 +109,19 @@ void testInsertTable()
     t.reset();
     // select.
     ok = db.execute("SELECT * FROM PersonTable");
-    std::cout << "Record count: " << db.recordCount() << std::endl;
-    while (!db.isEnd())
+    std::cout << "Record count: " << db.record_count() << std::endl;
+    while (!db.is_end())
     {
-        db.moveNext();
+        db.move_next();
     }
     // 100w 300~500ms.
     std::cout << "Select elapsed: " << t.elapsed() << std::endl;
     (void)ok;
 }
 
-void testInsertTable2()
+void test_insert_table2()
 {
-    smartdb::Database db;
+    smartdb::database db;
     bool ok = db.open("test.db");
 
     std::string sql = "DROP TABLE PersonTable2";
@@ -137,71 +137,72 @@ void testInsertTable2()
     char buf[50 * 1025] = {"\0"};
     fin.read(buf, sizeof(buf));
     std::string image = std::string(buf, fin.gcount());
-    smartdb::Blob headImage;
-    headImage.buf = image.c_str();
-    headImage.size = image.length();
+    smartdb::db_blob head_image;
+    head_image.buf = image.c_str();
+    head_image.size = image.length();
 
     sql = "INSERT INTO PersonTable2(id, name, address, headerImage) VALUES(?, ?, ?, ?)";
     for (int i = 0; i < 10; ++i)
     {
-        /* ok = db.execute(sql, i, "Tom", nullptr, headImage); */
-        ok = db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr, headImage));
+        /* ok = db.execute(sql, i, "Tom", nullptr, head_image); */
+        ok = db.execute(sql, std::forward_as_tuple(i, "Tom", nullptr, head_image));
     }
 
     // update.
     sql = "UPDATE PersonTable2 SET address=? WHERE id=?";
     if (!db.execute(sql, "中国", 0))
     {
-        std::cout << "Error message: " << db.getErrorMessage() << std::endl;
+        std::cout << "Error message: " << db.get_error_message() << std::endl;
         return;
     }
-    std::cout << "Update success, affected rows: " << db.affectedRows() << std::endl;
+    std::cout << "Update success, affected rows: " << db.affected_rows() << std::endl;
 
     // select.
     ok = db.execute("SELECT * FROM PersonTable2 WHERE id=?", 0);
     /* ok = db.execute("SELECT * FROM PersonTable2"); */
-    while (!db.isEnd())
+    while (!db.is_end())
     {
         try
         {
-            std::cout << "id: " << db.getFiled<sqlite3_int64>(0) << std::endl;
-            std::cout << "name: " << db.getFiled<std::string>(1) << std::endl;
-            std::cout << "address: " << db.getFiled<std::string>(2) << std::endl;
-            std::cout << "image size: " << db.getFiled<std::string>(3).size() << std::endl;
+            std::cout << "id: " << db.get<sqlite3_int64>(0) << std::endl;
+            std::cout << "name: " << db.get<std::string>(1) << std::endl;
+            std::cout << "address: " << db.get<std::string>(2) << std::endl;
+            std::cout << "image size: " << db.get<std::string>(3).size() << std::endl;
         }
         catch (std::exception& e)
         {
             std::cout << "Exception: " << e.what() << std::endl;
             return;
         }
-        db.moveNext();
+        db.move_next();
     }
 
     ok = db.execute("SELECT COUNT(*) FROM PersonTable2");
-    if (db.recordCount() == 1 && !db.isEnd())
+    if (db.record_count() == 1 && !db.is_end())
     {
-        std::cout << "COUNT(*): " << db.getFiled<sqlite3_int64>(0) << std::endl;
+        std::cout << "COUNT(*): " << db.get<sqlite3_int64>(0) << std::endl;
     }
     (void)ok;
 }
 
 int main()
 {
-    testInsertTable();
-    testInsertTable2();
+    test_insert_table();
+    test_insert_table2();
 
     return 0;
 }
+
 
 ```
 
 ## 注意
 
-smartdb里面所支持的类型有int, uint32_t, double, sqlite3_int64, char*, const char*, std::string, Blob, std::nullptr_t，当调用`db.getFiled<>`函数获取值时，传入的类型必须是smartdb所支持的类型并且该类型为smartdb内部存储该值的类型，比如说有一个id字段，在smartdb里面是sqlite3_int64类型，正确的做法是调用`db.getFiled<sqlite3_int64>`而不是调用`db.getFiled<std::string>`函数获取std::string类型的值，如果类型错误，程序将会抛出异常，用户需捕获该异常。
+smartdb里面所支持的类型有int, uint32_t, double, sqlite3_int64, char*, const char*, std::string, Blob, std::nullptr_t，当调用`db.get<>`函数获取值时，传入的类型必须是smartdb所支持的类型并且该类型为smartdb内部存储该值的类型，比如说有一个id字段，在smartdb里面是sqlite3_int64类型，正确的做法是调用`db.get<sqlite3_int64>`而不是调用`db.get<std::string>`函数获取std::string类型的值，如果类型错误，程序将会抛出异常，用户需捕获该异常。
 
 ## 依赖性
 
-* boost.variant
+* boost
 * c++11
 
 ## 兼容性

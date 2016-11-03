@@ -15,25 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\smartdb\BindParames.hpp">
+    <ClInclude Include="..\smartdb\bind_parames.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\smartdb\Database.hpp">
+    <ClInclude Include="..\smartdb\database.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\smartdb\Define.hpp">
+    <ClInclude Include="..\smartdb\define.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\smartdb\Query.hpp">
+    <ClInclude Include="..\smartdb\db_query.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\smartdb\Traits.hpp">
+    <ClInclude Include="..\smartdb\traits.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\smartdb\TupleHelper.hpp">
+    <ClInclude Include="..\smartdb\tuple_helper.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.hpp">
+    <ClInclude Include="timer.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

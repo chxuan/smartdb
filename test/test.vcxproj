@@ -150,12 +150,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\smartdb\BindParames.hpp" />
-    <ClInclude Include="..\smartdb\Database.hpp" />
-    <ClInclude Include="..\smartdb\Define.hpp" />
-    <ClInclude Include="..\smartdb\Query.hpp" />
-    <ClInclude Include="..\smartdb\Traits.hpp" />
-    <ClInclude Include="..\smartdb\TupleHelper.hpp" />
+    <ClInclude Include="..\smartdb\bind_parames.hpp" />
+    <ClInclude Include="..\smartdb\database.hpp" />
+    <ClInclude Include="..\smartdb\define.hpp" />
+    <ClInclude Include="..\smartdb\db_query.hpp" />
+    <ClInclude Include="..\smartdb\traits.hpp" />
+    <ClInclude Include="..\smartdb\tuple_helper.hpp" />
     <ClInclude Include="Timer.hpp" />
   </ItemGroup>
   <ItemGroup>
