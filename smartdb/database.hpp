@@ -145,7 +145,10 @@ public:
 
     void move_next()
     {
-        ++_iter;
+        if (!is_end())
+        {
+            ++_iter;
+        }
     }
 
     bool is_end()
@@ -153,6 +156,7 @@ public:
         if (_iter == _buf.end())
         {
             _buf.clear();
+            move_first();
             return true;
         }
         return false;
