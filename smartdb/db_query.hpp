@@ -14,21 +14,21 @@ class db_query
 {
 public:
     db_query() = default;
-    db_query(std::vector<std::vector<db_variant>>& buf, int& code) : _buf(buf), _code(code) {}
+    db_query(std::vector<std::vector<db_variant>>& buf, int& code) : buf_(buf), code_(code) {}
 
     bool is_select(sqlite3_stmt* statement)
     {
-        _col_count = sqlite3_column_count(statement);
-        return _col_count == 0 ? false : true;
+        col_count_ = sqlite3_column_count(statement);
+        return col_count_ == 0 ? false : true;
     }
     
     bool read_table(sqlite3_stmt* statement)
     {
-        _buf.clear();
+        buf_.clear();
         while (true)
         {
-            _code = sqlite3_step(statement);
-            if (_code == SQLITE_DONE)
+            code_ = sqlite3_step(statement);
+            if (code_ == SQLITE_DONE)
             {
                 break;
             }
@@ -36,7 +36,7 @@ public:
             if (!read_row(statement))
             {
                 sqlite3_reset(statement);
-                _buf.clear();
+                buf_.clear();
                 return false;
             }
         }
@@ -49,8 +49,8 @@ private:
     bool read_row(sqlite3_stmt* statement)
     {
         std::vector<db_variant> rowBuf;
-        rowBuf.reserve(_col_count);
-        for (int i = 0; i < _col_count; ++i)
+        rowBuf.reserve(col_count_);
+        for (int i = 0; i < col_count_; ++i)
         {
             if (!read_value(statement, i, rowBuf))
             {
@@ -58,7 +58,7 @@ private:
             }
         }
 
-        _buf.emplace_back(std::move(rowBuf));
+        buf_.emplace_back(std::move(rowBuf));
         return true;
     }
 
@@ -104,9 +104,9 @@ private:
     }
 
 private:
-    std::vector<std::vector<db_variant>>& _buf;
-    int& _code;
-    int _col_count = 0;
+    std::vector<std::vector<db_variant>>& buf_;
+    int& code_;
+    int col_count_ = 0;
 };
 
 }
