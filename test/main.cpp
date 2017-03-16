@@ -6,7 +6,8 @@
 void test_insert_table()
 {
     smartdb::database db;
-    bool ok = db.open("test.db");
+    /* bool ok = db.open_file_db("test.db"); */
+    bool ok = db.open_memory_db();
 
     std::string sql = "DROP TABLE PersonTable";
     ok = db.execute(sql);
@@ -67,7 +68,8 @@ void test_insert_table()
 void test_insert_table2()
 {
     smartdb::database db;
-    bool ok = db.open("test.db");
+    /* bool ok = db.open_file_db("test.db"); */
+    bool ok = db.open_memory_db();
 
     std::string sql = "DROP TABLE PersonTable2";
     ok = db.execute(sql);

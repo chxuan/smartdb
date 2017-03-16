@@ -27,9 +27,15 @@ public:
         close();
     }
 
-    bool open(const std::string& databaseName)
+    bool open_file_db(const std::string& databaseName)
     {
         code_ = sqlite3_open(databaseName.c_str(), &db_handle_);
+        return code_ == SQLITE_OK;
+    }
+
+    bool open_memory_db()
+    {
+        code_ = sqlite3_open(memory_db_str.c_str(), &db_handle_);
         return code_ == SQLITE_OK;
     }
 

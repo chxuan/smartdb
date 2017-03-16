@@ -7,12 +7,18 @@ A SQLite client library written in Modern C++
 [![Build Status](https://travis-ci.org/chxuan/smartdb.svg?branch=master)](https://travis-ci.org/chxuan/smartdb)
 [![Coverage Status](https://coveralls.io/repos/github/chxuan/smartdb/badge.svg?branch=master)](https://coveralls.io/github/chxuan/smartdb?branch=master)
 
-* **连接数据库，若`test.db`不存在，则会创建一个.**
+* **连接文件数据库，若`test.db`不存在，则会创建一个.**
 
     ```cpp
-    db.open("test.db")
+    db.open_file_db("test.db")
     ```
-    
+
+ * **连接内存数据库.**
+
+    ```cpp
+    db.open_memory_db()
+    ```
+   
 * **INSERT操作.**
 
     ```cpp
@@ -61,7 +67,7 @@ A SQLite client library written in Modern C++
 void test_insert_table()
 {
     smartdb::database db;
-    bool ok = db.open("test.db");
+    bool ok = db.open_file_db("test.db");
 
     std::string sql = "DROP TABLE PersonTable";
     ok = db.execute(sql);
@@ -122,7 +128,7 @@ void test_insert_table()
 void test_insert_table2()
 {
     smartdb::database db;
-    bool ok = db.open("test.db");
+    bool ok = db.open_file_db("test.db");
 
     std::string sql = "DROP TABLE PersonTable2";
     ok = db.execute(sql);

@@ -8,6 +8,7 @@
 const std::string begin_str = "begin";
 const std::string commit_str = "commit";
 const std::string rollback_str = "rollback";
+const std::string memory_db_str = ":memory:";
 
 namespace smartdb
 {
