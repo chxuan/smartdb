@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 #include <unordered_map>
 #include <functional>
 #include "define.hpp"
@@ -14,7 +15,7 @@ class db_query
 {
 public:
     db_query() = default;
-    db_query(std::vector<std::vector<db_variant>>& buf, int& code) : buf_(buf), code_(code) {}
+    db_query(std::list<std::vector<db_variant>>& buf, int& code) : buf_(buf), code_(code) {}
 
     bool is_select(sqlite3_stmt* statement)
     {
@@ -48,17 +49,17 @@ public:
 private:
     bool read_row(sqlite3_stmt* statement)
     {
-        std::vector<db_variant> rowBuf;
-        rowBuf.reserve(col_count_);
+        std::vector<db_variant> row_buf;
+        row_buf.reserve(col_count_);
         for (int i = 0; i < col_count_; ++i)
         {
-            if (!read_value(statement, i, rowBuf))
+            if (!read_value(statement, i, row_buf))
             {
                 return false;
             }
         }
 
-        buf_.emplace_back(std::move(rowBuf));
+        buf_.emplace_back(std::move(row_buf));
         return true;
     }
 
@@ -104,7 +105,7 @@ private:
     }
 
 private:
-    std::vector<std::vector<db_variant>>& buf_;
+    std::list<std::vector<db_variant>>& buf_;
     int& code_;
     int col_count_ = 0;
 };

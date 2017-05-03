@@ -6,7 +6,6 @@
 #include <memory>
 #include <tuple>
 #include <functional>
-#include <unordered_map>
 #include <type_traits>
 #include "traits.hpp"
 #include "bind_parames.hpp"
@@ -246,8 +245,8 @@ private:
     sqlite3* db_handle_ = nullptr;
     sqlite3_stmt* statement_ = nullptr;
     int code_ = 0;
-    std::vector<std::vector<db_variant>> buf_;
-    std::vector<std::vector<db_variant>>::iterator iter_ = buf_.end();
+    std::list<std::vector<db_variant>> buf_;
+    std::list<std::vector<db_variant>>::iterator iter_ = buf_.end();
     db_query query_;
 };
 
