@@ -96,19 +96,6 @@ public:
         return try_select();
     }
 
-    bool try_select()
-    {
-        if (query_.is_select(statement_))
-        {
-            if (!query_.read_table(statement_))
-            {
-                return false;
-            }
-            move_first();
-        }
-        return true;
-    }
-
     bool prepare(const std::string& sql)
     {
         code_ = sqlite3_prepare_v2(db_handle_, sql.c_str(), -1, &statement_, nullptr);
@@ -211,6 +198,19 @@ public:
     }
 
 private:
+    bool try_select()
+    {
+        if (query_.is_select(statement_))
+        {
+            if (!query_.read_table(statement_))
+            {
+                return false;
+            }
+            move_first();
+        }
+        return true;
+    }
+
     int close_db_handle()
     {
         int ret = sqlite3_close(db_handle_);
