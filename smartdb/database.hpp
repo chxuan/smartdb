@@ -45,7 +45,11 @@ public:
             return true;
         }
 
-        sqlite3_finalize(statement_);
+        if (statement_)
+        {
+            sqlite3_finalize(statement_);
+            statement_ = nullptr;
+        }
         code_ = close_db_handle();
         statement_ = nullptr;
         db_handle_ = nullptr;
@@ -98,6 +102,11 @@ public:
 
     bool prepare(const std::string& sql)
     {
+        if (statement_)
+        {
+            sqlite3_finalize(statement_);
+            statement_ = nullptr;
+        }
         code_ = sqlite3_prepare_v2(db_handle_, sql.c_str(), -1, &statement_, nullptr);
         return code_ == SQLITE_OK;
     }
